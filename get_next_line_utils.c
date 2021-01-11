@@ -10,4 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
 
+size_t	ft_strlen(const char *s)
+{
+	unsigned long rt;
+
+	rt = 0;
+	while (*(s + rt) != '\0')
+		rt++;
+	return (rt);
+}

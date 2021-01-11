@@ -14,5 +14,12 @@
 
 int	get_next_line(int fd, char **line)
 {
-	read(fd, *line, ft_strlen(*line));	
+	if (read(fd, *line, ft_strlen(*line)) > 0)
+		return 1;
+	else if (read(fd, *line, ft_strlen(*line)) == 0)
+		return (0);
+	else
+		return -1;
 }
+
+
