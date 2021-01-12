@@ -9,6 +9,7 @@ normal:
 
 main:
 	$(CC) $(FLAGS) -D BUFFER_SIZE=$(BUFFER_SIZE) $(SRC) main.c -o $(OUT)
+	./$(OUT)
 
 lldb:
 	$(CC) $(FLAGS) -g -D BUFFER_SIZE=$(BUFFER_SIZE) $(SRC) main.c -o $(OUT)
