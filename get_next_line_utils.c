@@ -6,7 +6,7 @@
 /*   By: amaroni <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 11:22:33 by amaroni           #+#    #+#             */
-/*   Updated: 2021/01/13 10:43:34 by amaroni          ###   ########.fr       */
+/*   Updated: 2021/01/16 08:31:45 by amaroni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,73 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (rt_pointer);
 }
 
-void	*ft_memchr(void *s, int c, size_t n)
+char	*ft_strchr(char *s, int c)
 {
-	size_t i;
+	int i;
 
 	i = 0;
-	while (i < n)
+	while ((*(s + i) != (char)c) && (*(s + i) != '\0'))
+		i++;
+	if (*(s + i) == (char)c)
+		return (s + i);
+	else
+		return (NULL);
+}
+
+char	*ft_strdup(char *s)
+{
+	char		*rt_pointer;
+	size_t		i;
+
+	if ((rt_pointer = (char*)malloc((ft_strlen(s) + 1) * sizeof(char))) == NULL)
 	{
-		if (*((char*)s + i) == (char)c)
-			return (s + i);
-		else
-			i++;
+		free(rt_pointer);
+		return (NULL);
 	}
-	return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		rt_pointer[i] = s[i];
+		i++;
+	}
+	rt_pointer[i] = '\0';
+	return (rt_pointer);
+}
+
+size_t		ft_strlcat(char *dst, char *src, size_t size)
+{
+	size_t i;
+	size_t y;
+	size_t rt;
+
+	i = 0;
+	y = ft_strlen(dst);
+	if (size <= ft_strlen(dst))
+		return (size + ft_strlen(src));
+	rt = ft_strlen(dst) + ft_strlen(src);
+	while (src[i] && y < (size - 1))
+	{
+		dst[y] = src[i];
+		y++;
+		i++;
+	}
+	*(dst + y) = '\0';
+	return (rt);
+}
+
+size_t		ft_strlcpy(char *dst, char *src, size_t size)
+{
+	unsigned long y;
+
+	y = ft_strlen(src);
+	if (size <= 0)
+		return (y);
+	while ((size-- > 1) && (*src))
+	{
+		*dst = *src;
+		dst++;
+		src++;
+	}
+	*dst = '\0';
+	return (y);
 }

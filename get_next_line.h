@@ -6,7 +6,7 @@
 /*   By: amaroni <amaroni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 10:55:20 by amaroni           #+#    #+#             */
-/*   Updated: 2021/01/13 11:06:52 by amaroni          ###   ########.fr       */
+/*   Updated: 2021/01/16 08:32:14 by amaroni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef GET_NEXT_LINE_H
@@ -19,5 +19,8 @@ int	get_next_line(int fd, char **line);
 size_t	ft_strlen(const char *s);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
-void	*ft_memchr(void *s, int c, size_t n);
+char	*ft_strchr(char *s, int c);
+char	*ft_strdup(char *s);
+size_t	ft_strlcat(char *dst, char *src, size_t size);
+size_t	ft_strlcpy(char *dst, char *src, size_t size);
 #endif
