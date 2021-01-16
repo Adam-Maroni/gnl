@@ -6,7 +6,7 @@
 /*   By: amaroni <amaroni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 10:37:08 by amaroni           #+#    #+#             */
-/*   Updated: 2021/01/16 17:08:18 by amaroni          ###   ########.fr       */
+/*   Updated: 2021/01/16 22:07:58 by amaroni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,20 @@
 
 int	get_next_line(int fd, char **line)
 {
-	size_t		read_bytes;
-	char		*buffer;
+	size_t	read_bytes;
+	char	*buffer;
 	static char	*string = NULL;
-	char		*tmp;
-	char		*n;
+	char	*tmp;
+	char	*n;
 
-	read_bytes = 0;
+	read_bytes = 1;
 	buffer = (char*)ft_calloc(BUFFER_SIZE, sizeof(*buffer));
-	if (!string)
-		while ((read_bytes = read(fd, buffer, BUFFER_SIZE)) > 0)
-			if (!(string = ft_strjoin(string, buffer)))
-				return (-1);
+	while (!ft_strchr(buffer, (int)'\n') && read_bytes > 0)
+	{
+		read_bytes = read(fd, buffer, BUFFER_SIZE);
+		if (!(string = ft_strjoin(string, buffer)))
+			return (-1);
+	}
 	free(buffer);
 	if ((n = ft_strchr(string, (int)'\n')))
 	{
