@@ -6,7 +6,7 @@
 /*   By: amaroni <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 11:22:33 by amaroni           #+#    #+#             */
-/*   Updated: 2021/01/16 08:31:45 by amaroni          ###   ########.fr       */
+/*   Updated: 2021/01/16 12:54:18 by amaroni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,4 +113,22 @@ size_t		ft_strlcpy(char *dst, char *src, size_t size)
 	}
 	*dst = '\0';
 	return (y);
+}
+
+char		*ft_strjoin(char *s1, char *s2)
+{
+	char	*new_string;
+
+	if (!s1 && !s2)
+		return (NULL);
+	if (!s1)
+		return (ft_strdup(s2));
+	if (!s2)
+		return (ft_strdup(s1));
+	if (!(new_string =
+malloc((ft_strlen(s1) + ft_strlen(s2)) + 1 * sizeof(char))))
+		return (NULL);
+	ft_strlcpy(new_string, s1, ft_strlen(s1) + 1);
+	ft_strlcat(new_string, s2, ft_strlen(new_string) + ft_strlen(s2) + 1);
+	return (new_string);
 }
