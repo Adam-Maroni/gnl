@@ -22,6 +22,6 @@ void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strchr(char *s, int c);
 char	*ft_strdup(char *s);
 size_t	ft_strlcat(char *dst, char *src, size_t size);
-size_t	ft_strlcpy(char *dst, char *src, size_t size);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_strjoin(char *s1, char *s2);
 #endif

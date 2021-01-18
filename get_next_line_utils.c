@@ -98,21 +98,25 @@ size_t		ft_strlcat(char *dst, char *src, size_t size)
 	return (rt);
 }
 
-size_t		ft_strlcpy(char *dst, char *src, size_t size)
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
-	unsigned long y;
+	unsigned int	i;
 
-	y = ft_strlen(src);
-	if (size <= 0)
-		return (y);
-	while ((size-- > 1) && (*src))
+	i = 0;
+	if (!dst || !src)
+		return (0);
+	if (size > 0)
 	{
-		*dst = *src;
-		dst++;
-		src++;
+		while (--size && src[i])
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
 	}
-	*dst = '\0';
-	return (y);
+	while (src[i])
+		i++;
+	return (i);
 }
 
 char		*ft_strjoin(char *s1, char *s2)

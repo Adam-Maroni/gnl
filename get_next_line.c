@@ -18,28 +18,38 @@
 int	get_next_line(int fd, char **line)
 {
 	size_t	read_bytes;
+	static char	*reminder = NULL;
 	char	*buffer;
-	static char	*string = NULL;
 	char	*tmp;
 	char	*n;
 
-	read_bytes = 1;
-	buffer = (char*)ft_calloc(BUFFER_SIZE, sizeof(*buffer));
-	while (!ft_strchr(buffer, (int)'\n') && read_bytes > 0)
-	{
-		read_bytes = read(fd, buffer, BUFFER_SIZE);
-		if (!(string = ft_strjoin(string, buffer)))
+	buffer = (char*)ft_calloc(BUFFER_SIZE + 1, sizeof(*buffer));
+	if ((read_bytes = read(fd, buffer, BUFFER_SIZE)) > 0)
+		if(!(reminder = ft_strjoin(reminder, buffer)))
 			return (-1);
-	}
 	free(buffer);
-	if ((n = ft_strchr(string, (int)'\n')))
+	if (reminder[0])
 	{
-		ft_strlcpy(*line, string, n - string + 1);
-		tmp = string;
-		string = ft_strdup(++n);
-		free(tmp);
+		if ((n = ft_strchr(reminder, (int)'\n')))
+		{
+			ft_strlcpy(*line, reminder, n - reminder + 1);
+			tmp = reminder;
+			if (++n)
+				reminder = ft_strdup(n);
+			free(tmp);
+		}
+		else
+		{
+			ft_strlcpy(*line, reminder, ft_strlen(reminder) + 1 );
+			ft_bzero(reminder, ft_strlen(reminder));
+		}
 		return (1);
 	}
-	free(string);
-	return (read_bytes);
+	else if (read_bytes == 0)
+	{
+		free(reminder);
+		return (0);
+	}
+	else
+			return (-1);
 }
