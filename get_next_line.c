@@ -15,41 +15,59 @@
 # define BUFFER_SIZE 4096
 #endif
 
+
+void string2line(char **string, char **line, char *character)
+{
+	char *tmp;
+	int i;
+
+	i = 0;
+	tmp = *string;
+	while (*string[i] != *character)
+	{
+		*(line[i]) = *string[i];
+		i++;
+	}
+	*string = ft_strdup(character);
+	free(tmp);
+}
+
 int	get_next_line(int fd, char **line)
 {
-	size_t	read_bytes;
-	static char	*reminder = NULL;
-	char	*buffer;
-	char	*tmp;
-	char	*n;
+	static char* string;
+	size_t rd;
+	char *buf;
 
-	buffer = (char*)ft_calloc(BUFFER_SIZE + 1, sizeof(*buffer));
-	if ((read_bytes = read(fd, buffer, BUFFER_SIZE)) > 0)
-		if(!(reminder = ft_strjoin(reminder, buffer)))
+	buf = (char*)ft_calloc(BUFFER_SIZE + 1, sizeof(*buf));
+
+	while ((rd = read(fd, buf, BUFFER_SIZE)) > 0 && !ft_strchr(buf, (int)'\n'))
+		if (!(string = ft_strjoin(string, buf)))
 			return (-1);
-	free(buffer);
-	if (reminder[0])
+	free(buf);
+
+	if (rd == 0)
 	{
-		if ((n = ft_strchr(reminder, (int)'\n')))
+		if (!(*string))
 		{
-			ft_strlcpy(*line, reminder, n - reminder + 1);
-			tmp = reminder;
-			if (++n)
-				reminder = ft_strdup(n);
-			free(tmp);
+			free(string);
+			return (0);
 		}
 		else
 		{
-			ft_strlcpy(*line, reminder, ft_strlen(reminder) + 1 );
-			ft_bzero(reminder, ft_strlen(reminder));
+			if (ft_strchr(string, (int)'\n'))
+				string2line(&string, line, ft_strchr(string, (int)'\n'));
+			else
+				string2line(&string, line, ft_strchr(string, (int)'\0'));
+			return (1);
 		}
+	}
+	else if (ft_strchr(string, (int)'\n'))
+	{
+		string2line(&string, line, ft_strchr(string, (int)'\n'));
 		return (1);
 	}
-	else if (read_bytes == 0)
-	{
-		free(reminder);
-		return (0);
-	}
 	else
-			return (-1);
+		return (-1);
 }
+
+
