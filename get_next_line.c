@@ -19,30 +19,33 @@
 void string2line(char **string, char **line, char *character)
 {
 	char *tmp;
-	int i;
 
-	i = 0;
 	tmp = *string;
-	while (*string[i] != *character)
-	{
-		*(line[i]) = *string[i];
-		i++;
-	}
-	*string = ft_strdup(character);
+	ft_strlcpy(*line, *string, character - *string + 1);
+	*string = ft_strdup(++character);
 	free(tmp);
 }
 
 int	get_next_line(int fd, char **line)
 {
-	static char* string;
+	static char* string = NULL;
 	size_t rd;
 	char *buf;
 
 	buf = (char*)ft_calloc(BUFFER_SIZE + 1, sizeof(*buf));
+	if (!string)
+		string = (char*)ft_calloc(1, sizeof(*string));
 
-	while ((rd = read(fd, buf, BUFFER_SIZE)) > 0 && !ft_strchr(buf, (int)'\n'))
-		if (!(string = ft_strjoin(string, buf)))
-			return (-1);
+	while ((!ft_strchr(string, (int)'\n')))
+	{
+		if ((rd = read(fd, buf, BUFFER_SIZE)) > 0)
+		{
+			if (!(string = ft_strjoin(string, buf)))
+				return (-1);
+		}
+		else
+			break;
+	}
 	free(buf);
 
 	if (rd == 0)
