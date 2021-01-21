@@ -72,7 +72,8 @@ int	get_next_line(int fd, char **line)
 			else
 			{
 				string2line(&string, line, ft_strchr(string, (int)'\0'));
-				ft_bzero(string, ft_strlen(string));
+				free(string);
+				return (0);
 			}
 			return (1);
 		}
@@ -85,5 +86,3 @@ int	get_next_line(int fd, char **line)
 	else
 		return (-1);
 }
-
-
