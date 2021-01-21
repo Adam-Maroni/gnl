@@ -19,11 +19,17 @@
 void string2line(char **string, char **line, char *character)
 {
 	char *tmp;
+	char *tmp2;
 
 	tmp = *string;
+	tmp2 = *line;
+	*line = (char*)ft_calloc(character - *string + 2, sizeof(**line));
 	ft_strlcpy(*line, *string, character - *string + 1);
 	*string = ft_strdup(++character);
-	free(tmp);
+	if (tmp)
+		free(tmp);
+	if (tmp2)
+		free(tmp2);
 }
 
 int	get_next_line(int fd, char **line)
@@ -42,6 +48,8 @@ int	get_next_line(int fd, char **line)
 		{
 			if (!(string = ft_strjoin(string, buf)))
 				return (-1);
+			else
+				ft_bzero(buf, ft_strlen(buf));
 		}
 		else
 			break;
