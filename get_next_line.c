@@ -68,7 +68,10 @@ int	get_next_line(int fd, char **line)
 			if (ft_strchr(string, (int)'\n'))
 				string2line(&string, line, ft_strchr(string, (int)'\n'));
 			else
+			{
 				string2line(&string, line, ft_strchr(string, (int)'\0'));
+				ft_bzero(string, ft_strlen(string));
+			}
 			return (1);
 		}
 	}
