@@ -15,8 +15,7 @@
 # define BUFFER_SIZE 4096
 #endif
 
-
-void string2line(char **string, char **line, char *character)
+void	string2line(char **string, char **line, char *character)
 {
 	char *tmp;
 	char *tmp2;
@@ -34,55 +33,31 @@ void string2line(char **string, char **line, char *character)
 		free(tmp2);
 }
 
-int	get_next_line(int fd, char **line)
+int		get_next_line(int fd, char **line)
 {
-	static char* string = NULL;
-	size_t rd;
-	char *buf;
+	char		*buf;
+	size_t		rd;
+	static char	*string = NULL;
 
-	buf = (char*)ft_calloc(BUFFER_SIZE + 1, sizeof(*buf));
+	buf = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(*buf));
 	if (!string)
-		string = (char*)ft_calloc(1, sizeof(*string));
-
+		string = (char *)ft_calloc(1, sizeof(*string));
 	while ((!ft_strchr(string, (int)'\n')))
 	{
-		if ((rd = read(fd, buf, BUFFER_SIZE)) > 0)
-		{
-			if (!(string = ft_strjoin(string, buf)))
-				return (-1);
-			else
-				ft_bzero(buf, ft_strlen(buf));
-		}
-		else
-			break;
+		if ((rd = read(fd, buf, BUFFER_SIZE)) <= 0)
+			break ;
+		if ((string = ft_strjoin(string, buf)))
+			ft_bzero(buf, ft_strlen(buf));
 	}
 	free(buf);
-
-	if (rd == 0)
-	{
-		if (!(*string))
-		{
-			free(string);
-			return (0);
-		}
-		else
-		{
-			if (ft_strchr(string, (int)'\n'))
-				string2line(&string, line, ft_strchr(string, (int)'\n'));
-			else
-			{
-				string2line(&string, line, ft_strchr(string, (int)'\0'));
-				free(string);
-				return (0);
-			}
-			return (1);
-		}
-	}
-	else if (ft_strchr(string, (int)'\n'))
+	if (ft_strchr(string, (int)'\n'))
 	{
 		string2line(&string, line, ft_strchr(string, (int)'\n'));
-		return (1);
+		return (rd);
 	}
-	else
-		return (-1);
+	else if (*string)
+		string2line(&string, line, ft_strchr(string, (int)'\0'));
+	if (string)
+		free(string);
+	return (rd);
 }
