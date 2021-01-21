@@ -25,7 +25,9 @@ void string2line(char **string, char **line, char *character)
 	tmp2 = *line;
 	*line = (char*)ft_calloc(character - *string + 2, sizeof(**line));
 	ft_strlcpy(*line, *string, character - *string + 1);
-	*string = ft_strdup(++character);
+	if (*character != '\0')
+		character++;
+	*string = ft_strdup(character);
 	if (tmp)
 		free(tmp);
 	if (tmp2)
