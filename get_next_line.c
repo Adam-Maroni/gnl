@@ -11,53 +11,60 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 4096
-#endif
 
-void	string2line(char **string, char **line, char *character)
+void	free_mem(char **pt)
 {
-	char *tmp;
-	char *tmp2;
+	if (*pt)
+	{
+		free(*pt);
+		*pt = NULL;
+	}
+}
 
+int		string2line(char **string, char **line, char *character)
+{
+	char	*tmp;
+	int		rt;
+
+	rt = 0;
 	tmp = *string;
-	tmp2 = *line;
 	*line = (char*)ft_calloc(character - *string + 2, sizeof(**line));
 	ft_strlcpy(*line, *string, character - *string + 1);
 	if (*character != '\0')
+	{
 		character++;
+		rt = 1;
+	}
 	*string = ft_strdup(character);
-	if (tmp)
-		free(tmp);
-	if (tmp2)
-		free(tmp2);
+	free_mem(&tmp);
+	return (rt);
 }
 
 int		get_next_line(int fd, char **line)
 {
 	char		*buf;
-	size_t		rd;
+	char		*tmp;
+	int			rd;
 	static char	*string = NULL;
 
 	buf = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(*buf));
-	if (!string)
-		string = (char *)ft_calloc(1, sizeof(*string));
+	rd = 1;
+	if (BUFFER_SIZE <= 0 || !buf || !line || fd <= 0)
+		return (-1);
+	(!string) ? (string = (char*)ft_calloc(1, sizeof(*string))) : NULL;
 	while ((!ft_strchr(string, (int)'\n')))
 	{
-		if ((rd = read(fd, buf, BUFFER_SIZE)) <= 0)
+		if ((rd = read(fd, buf, BUFFER_SIZE)) == 0)
 			break ;
+		else if (rd < 0)
+			return (-1);
+		tmp = string;
 		if ((string = ft_strjoin(string, buf)))
 			ft_bzero(buf, ft_strlen(buf));
+		free_mem(&tmp);
 	}
-	free(buf);
+	free_mem(&buf);
 	if (ft_strchr(string, (int)'\n'))
-	{
-		string2line(&string, line, ft_strchr(string, (int)'\n'));
-		return (rd);
-	}
-	else if (*string)
-		string2line(&string, line, ft_strchr(string, (int)'\0'));
-	if (string)
-		free(string);
-	return (rd);
+		return (string2line(&string, line, ft_strchr(string, (int)'\n')));
+	return (string2line(&string, line, ft_strchr(string, (int)'\0')));
 }
