@@ -12,6 +12,29 @@
 
 #include "get_next_line.h"
 
+size_t	ft_strlen(const char *s)
+{
+	unsigned long rt;
+
+	rt = 0;
+	if (s)
+		while (*(s + rt) != '\0')
+			rt++;
+	return (rt);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	size_t i;
+
+	i = 0;
+	while (i < n)
+	{
+		*((char*)s + i) = '\0';
+		i++;
+	}
+}
+
 void	free_mem(char **pt)
 {
 	if (*pt)
@@ -60,7 +83,7 @@ int		get_next_line(int fd, char **line)
 			return (-1);
 		tmp = string;
 		if ((string = ft_strjoin(string, buf)))
-			ft_bzero(buf, ft_strlen(buf));
+			ft_bzero(buf, BUFFER_SIZE + 1);
 		free_mem(&tmp);
 	}
 	free_mem(&buf);
