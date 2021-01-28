@@ -6,11 +6,11 @@
 /*   By: amaroni <amaroni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 10:37:08 by amaroni           #+#    #+#             */
-/*   Updated: 2021/01/27 09:39:35 by adam             ###   ########.fr       */
+/*   Updated: 2021/01/28 15:48:21 by amaroni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -44,21 +44,21 @@ void	free_mem(char **pt)
 	}
 }
 
-int		string2line(char **string, char **line, char *character)
+int		str2line(char **str, char **line, char *character)
 {
 	char	*tmp;
 	int		rt;
 
 	rt = 0;
-	tmp = *string;
-	*line = (char*)ft_calloc(character - *string + 2, sizeof(**line));
-	ft_strlcpy(*line, *string, character - *string + 1);
+	tmp = *str;
+	*line = (char*)ft_calloc(character - *str + 2, sizeof(**line));
+	ft_strlcpy(*line, *str, character - *str + 1);
 	if (*character != '\0')
 	{
 		character++;
 		rt = 1;
 	}
-	*string = ft_strdup(character);
+	*str = ft_strdup(character);
 	free_mem(&tmp);
 	return (rt);
 }
@@ -68,26 +68,26 @@ int		get_next_line(int fd, char **line)
 	char		*buf;
 	char		*tmp;
 	int			rd;
-	static char	*string = NULL;
+	static char	*str = NULL;
 
-	buf = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(*buf));
-	rd = 1;
-	if (BUFFER_SIZE <= 0 || !buf || !line || fd < 0)
+	if (BUFFER_SIZE <= 0 || !line || fd < 0)
 		return (-1);
-	(!string) ? (string = (char*)ft_calloc(1, sizeof(*string))) : NULL;
-	while ((!ft_strchr(string, (int)'\n')))
+	buf = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(*buf));
+	(!str) ? (str = (char*)ft_calloc(1, sizeof(*str))) : NULL;
+	while ((!ft_strchr(str, '\n')) && ((rd = read(fd, buf, BUFFER_SIZE)) != 0))
 	{
-		if ((rd = read(fd, buf, BUFFER_SIZE)) == 0)
-			break ;
-		else if (rd < 0)
+		if (rd < 0)
+		{
+			free_mem(&buf);
 			return (-1);
-		tmp = string;
-		if ((string = ft_strjoin(string, buf)))
+		}
+		tmp = str;
+		if ((str = ft_strjoin(str, buf)))
 			ft_bzero(buf, BUFFER_SIZE + 1);
 		free_mem(&tmp);
 	}
 	free_mem(&buf);
-	if (ft_strchr(string, (int)'\n'))
-		return (string2line(&string, line, ft_strchr(string, (int)'\n')));
-	return (string2line(&string, line, ft_strchr(string, (int)'\0')));
+	if (ft_strchr(str, (int)'\n'))
+		return (str2line(&str, line, ft_strchr(str, (int)'\n')));
+	return (str2line(&str, line, ft_strchr(str, (int)'\0')));
 }
