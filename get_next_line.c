@@ -23,27 +23,6 @@ size_t	ft_strlen(const char *s)
 	return (rt);
 }
 
-void	ft_bzero(void *s, size_t n)
-{
-	size_t i;
-
-	i = 0;
-	while (i < n)
-	{
-		*((char*)s + i) = '\0';
-		i++;
-	}
-}
-
-void	free_mem(char **pt)
-{
-	if (*pt)
-	{
-		free(*pt);
-		*pt = NULL;
-	}
-}
-
 int		str2line(char **str, char **line, char *character)
 {
 	char	*tmp;
@@ -59,34 +38,31 @@ int		str2line(char **str, char **line, char *character)
 		rt = 1;
 	}
 	*str = ft_strdup(character);
-	free_mem(&tmp);
+	free(tmp);
 	return (rt);
 }
 
 int		get_next_line(int fd, char **line)
 {
 	char		*buf;
-	char		*tmp;
 	int			rd;
 	static char	*str = NULL;
 
 	if (BUFFER_SIZE <= 0 || !line || fd < 0)
 		return (-1);
 	buf = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(*buf));
-	(!str) ? (str = (char*)ft_calloc(1, sizeof(*str))) : NULL;
+	if (!str)
+		str = (char*)ft_calloc(1, sizeof(*str));
 	while ((!ft_strchr(str, '\n')) && ((rd = read(fd, buf, BUFFER_SIZE)) != 0))
 	{
 		if (rd < 0)
 		{
-			free_mem(&buf);
+			free(buf);
 			return (-1);
 		}
-		tmp = str;
-		if ((str = ft_strjoin(str, buf)))
-			ft_bzero(buf, BUFFER_SIZE + 1);
-		free_mem(&tmp);
+		str = ft_strjoin(str, buf);
 	}
-	free_mem(&buf);
+	free(buf);
 	if (ft_strchr(str, (int)'\n'))
 		return (str2line(&str, line, ft_strchr(str, (int)'\n')));
 	return (str2line(&str, line, ft_strchr(str, (int)'\0')));

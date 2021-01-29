@@ -15,10 +15,16 @@
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*rt_pointer;
+	size_t	i;
 
+	i = 0;
 	if ((rt_pointer = (void*)malloc(nmemb * size)) == NULL)
 		return (NULL);
-	ft_bzero(rt_pointer, nmemb * size);
+	while (i < nmemb)
+	{
+		*((char*)rt_pointer + i) = '\0';
+		i++;
+	}
 	return (rt_pointer);
 }
 
@@ -76,7 +82,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	int		i;
 	int		len1;
@@ -87,8 +93,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	{
 		len1 = ft_strlen(s1);
 		len2 = ft_strlen(s2);
-		str = (char*)malloc(sizeof(char) * (len1 + len2 + 1));
-		if (str == NULL)
+		if (!(str = (char*)malloc(sizeof(char) * (len1 + len2 + 1))))
 			return (NULL);
 		i = -1;
 		while (s1[++i])
@@ -100,6 +105,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 			len1++;
 		}
 		str[len1] = '\0';
+		free(s1);
 		return (str);
 	}
 	return (NULL);
