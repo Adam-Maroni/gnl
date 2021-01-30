@@ -39,6 +39,7 @@ int		str2line(char **str, char **line, char *character)
 	}
 	*str = ft_strdup(character);
 	free(tmp);
+	tmp = NULL;
 	return (rt);
 }
 
@@ -60,6 +61,7 @@ int		get_next_line(int fd, char **line)
 			free(buf);
 			return (-1);
 		}
+		buf[rd] = '\0';
 		str = ft_strjoin(str, buf);
 	}
 	free(buf);
