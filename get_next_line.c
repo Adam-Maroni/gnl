@@ -30,7 +30,7 @@ int		str2line(char **str, char **line, char *character)
 
 	rt = 0;
 	tmp = *str;
-	*line = (char*)ft_calloc(character - *str + 2, sizeof(**line));
+	*line = (char*)ft_calloc(character - *str + 1, sizeof(**line));
 	ft_strlcpy(*line, *str, character - *str + 1);
 	if (*character != '\0')
 	{

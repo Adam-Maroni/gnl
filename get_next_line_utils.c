@@ -46,6 +46,8 @@ char	*ft_strdup(char *s)
 	char		*rt_pointer;
 	size_t		i;
 
+	if (!(*s))
+		return (NULL);
 	if ((rt_pointer = (char*)malloc((ft_strlen(s) + 1) * sizeof(char))) == NULL)
 	{
 		free(rt_pointer);
