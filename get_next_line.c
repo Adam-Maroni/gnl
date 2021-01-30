@@ -58,6 +58,7 @@ int		get_next_line(int fd, char **line)
 	{
 		if (rd < 0)
 		{
+			free(str);
 			free(buf);
 			return (-1);
 		}
